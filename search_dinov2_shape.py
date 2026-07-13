@@ -1,4 +1,4 @@
-"""DINOv2 인덱스에서 입력 이미지와 유사한 알약 이미지 Top-K를 검색한다."""
+"""DINOv2 제형 인덱스에서 입력 이미지의 의약품 제형을 검색한다."""
 
 from __future__ import annotations
 
@@ -7,37 +7,39 @@ from pathlib import Path
 
 import torch
 import torch.nn.functional as F
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from torchvision import transforms
 
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_WEIGHTS = ROOT / "dinov2_vits14_pretrain.pth"
-DEFAULT_INDEX = ROOT / "dinov2_pill_index.pt"
+DEFAULT_INDEX = ROOT / "dinov2_shape_index.pt"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="DINOv2 코사인 유사도 Top-K 검색")
-    parser.add_argument("query", type=Path, help="검색할 이미지 경로")
+    parser = argparse.ArgumentParser(description="DINOv2 의약품 제형 검색")
+    parser.add_argument("query", type=Path, help="제형을 검색할 이미지 경로")
     parser.add_argument("--index", type=Path, default=DEFAULT_INDEX)
     parser.add_argument("--weights", type=Path, default=DEFAULT_WEIGHTS)
-    parser.add_argument("--top-k", type=int, default=10)
+    parser.add_argument("--top-k", type=int, default=3)
     parser.add_argument(
-        "--device", choices=("auto", "cpu", "cuda"), default="auto"
-    )
-    parser.add_argument(
-        "--unique-item",
-        action="store_true",
-        help="같은 품목일련번호는 최고 점수 이미지 하나만 출력",
+        "--device", choices=("cpu", "cuda", "xpu"), default="cpu"
     )
     return parser.parse_args()
+
+
+def is_xpu_available() -> bool:
+    return hasattr(torch, "xpu") and torch.xpu.is_available()
 
 
 def select_device(requested: str) -> torch.device:
     if requested == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA를 요청했지만 사용할 수 있는 CUDA GPU가 없습니다.")
-    if requested == "auto":
-        requested = "cuda" if torch.cuda.is_available() else "cpu"
+    if requested == "xpu" and not is_xpu_available():
+        raise RuntimeError(
+            "XPU를 요청했지만 사용할 수 있는 Intel XPU가 없습니다. "
+            "XPU 지원 PyTorch와 Intel 그래픽 드라이버를 확인하세요."
+        )
     return torch.device(requested)
 
 
@@ -78,8 +80,11 @@ def extract_query_embedding(
             ),
         ]
     )
-    with Image.open(query_path) as image:
-        tensor = transform(image.convert("RGB")).unsqueeze(0).to(device)
+    try:
+        with Image.open(query_path) as image:
+            tensor = transform(image.convert("RGB")).unsqueeze(0).to(device)
+    except (OSError, UnidentifiedImageError) as error:
+        raise RuntimeError(f"이미지를 읽을 수 없습니다: {query_path}") from error
     with torch.inference_mode():
         return F.normalize(model(tensor).float(), p=2, dim=1).cpu()[0]
 
@@ -97,51 +102,50 @@ def main() -> None:
         raise ValueError("top-k는 1 이상이어야 합니다.")
     for path, description in (
         (args.query, "검색 이미지"),
-        (args.index, "인덱스"),
+        (args.index, "제형 인덱스"),
         (args.weights, "가중치"),
     ):
         if not path.is_file():
             raise FileNotFoundError(f"{description} 파일이 없습니다: {path}")
 
     index = safe_torch_load(args.index)
+    if index.get("index_type") != "dinov2_shape_centroids":
+        raise ValueError("제형 대표 벡터 인덱스가 아닙니다.")
     if index.get("model_name") != "dinov2_vits14":
         raise ValueError("인덱스가 dinov2_vits14 모델로 생성되지 않았습니다.")
-    embeddings = index["embeddings"].float()
-    records = index["records"]
-    if len(embeddings) != len(records):
-        raise ValueError("인덱스의 임베딩 수와 레코드 수가 다릅니다.")
+
+    shape_embeddings = index["shape_embeddings"].float()
+    classes = index["classes"]
+    if shape_embeddings.ndim != 2:
+        raise ValueError("제형 임베딩 텐서는 2차원이어야 합니다.")
+    if len(shape_embeddings) != len(classes):
+        raise ValueError("제형 임베딩 수와 클래스 수가 다릅니다.")
+    if not classes:
+        raise ValueError("제형 클래스가 없는 인덱스입니다.")
 
     device = select_device(args.device)
     model = load_model(args.weights, device)
     query = extract_query_embedding(model, args.query, device)
-    similarities = embeddings @ query  # L2 정규화 벡터의 내적 = 코사인 유사도
-    order = torch.argsort(similarities, descending=True).tolist()
+    if shape_embeddings.shape[1] != len(query):
+        raise ValueError("인덱스와 쿼리 임베딩 차원이 다릅니다.")
 
-    query_resolved = args.query.resolve()
-    results: list[tuple[float, dict]] = []
-    seen_item_ids: set[str] = set()
-    for index_number in order:
-        record = records[index_number]
-        if Path(record["path"]).resolve() == query_resolved:
-            continue
-        if args.unique_item and record["item_id"] in seen_item_ids:
-            continue
-        results.append((float(similarities[index_number]), record))
-        seen_item_ids.add(record["item_id"])
-        if len(results) == args.top_k:
-            break
+    similarities = shape_embeddings @ query
+    result_count = min(args.top_k, len(classes))
+    scores, indices = torch.topk(similarities, k=result_count)
 
-    print(f"검색 이미지: {query_resolved}")
-    print(f"Top-{len(results)} 결과")
-    print("-" * 100)
-    for rank, (score, record) in enumerate(results, start=1):
+    print(f"검색 이미지: {args.query.resolve()}")
+    print(f"Top-{result_count} 제형 결과")
+    print("-" * 80)
+    for rank, (score, index_number) in enumerate(
+        zip(scores.tolist(), indices.tolist()), start=1
+    ):
+        shape_class = classes[index_number]
         print(
             f"{rank:>2}. similarity={score:.6f}  "
-            f"item_id={record['item_id']}  shape={record['shape']}  "
-            f"side={record['side']}"
+            f"shape={shape_class['shape']}  "
+            f"images={shape_class['image_count']}  "
+            f"items={shape_class['item_count']}"
         )
-        print(f"    품목명: {record['product_name']}")
-        print(f"    이미지: {record['path']}")
 
 
 if __name__ == "__main__":

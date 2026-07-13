@@ -65,16 +65,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--workers", type=int, default=0)
     parser.add_argument(
-        "--device", choices=("auto", "cpu", "cuda"), default="auto"
+        "--device", choices=("cpu", "cuda", "xpu"), default="cpu"
     )
     return parser.parse_args()
+
+
+def is_xpu_available() -> bool:
+    return hasattr(torch, "xpu") and torch.xpu.is_available()
 
 
 def select_device(requested: str) -> torch.device:
     if requested == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA를 요청했지만 사용할 수 있는 CUDA GPU가 없습니다.")
-    if requested == "auto":
-        requested = "cuda" if torch.cuda.is_available() else "cpu"
+    if requested == "xpu" and not is_xpu_available():
+        raise RuntimeError(
+            "XPU를 요청했지만 사용할 수 있는 Intel XPU가 없습니다. "
+            "XPU 지원 PyTorch와 Intel 그래픽 드라이버를 확인하세요."
+        )
     return torch.device(requested)
 
 
