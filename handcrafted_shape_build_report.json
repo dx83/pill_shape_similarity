@@ -1,0 +1,203 @@
+{
+  "index": "C:\\Workspace\\deeplearning\\pill_shape_similarity\\handcrafted_shape_index.npz",
+  "source_csv": "C:\\Workspace\\deeplearning\\pill_shape_similarity\\csv\\OpenData_pill_final_cleaned_updated.csv",
+  "source_images": "C:\\Workspace\\deeplearning\\pill_shape_similarity\\pill_images_original",
+  "all_image_files": 54301,
+  "matched_images_considered": 54283,
+  "successful_images": 54282,
+  "failed_images": 1,
+  "indexed_items": 27345,
+  "indexed_shapes": 29,
+  "duplicate_csv_rows": 20,
+  "conflicting_item_ids_excluded": [
+    "200201478",
+    "201706587"
+  ],
+  "item_ids_without_shape": [
+    "nan"
+  ],
+  "images_excluded_for_conflict": 18,
+  "images_without_usable_metadata": 0,
+  "classes": [
+    {
+      "shape": "8자형",
+      "item_count": 174,
+      "image_count": 348,
+      "acceptance_radius": 1.7544187307357788
+    },
+    {
+      "shape": "강낭콩형",
+      "item_count": 4,
+      "image_count": 8,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "구형",
+      "item_count": 22,
+      "image_count": 42,
+      "acceptance_radius": 1.5896660089492798
+    },
+    {
+      "shape": "나비넥타이형",
+      "item_count": 14,
+      "image_count": 28,
+      "acceptance_radius": 1.446387767791748
+    },
+    {
+      "shape": "도넛형",
+      "item_count": 5,
+      "image_count": 10,
+      "acceptance_radius": 0.5473512411117554
+    },
+    {
+      "shape": "동물모양",
+      "item_count": 2,
+      "image_count": 4,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "땅콩형",
+      "item_count": 62,
+      "image_count": 124,
+      "acceptance_radius": 0.7096328735351562
+    },
+    {
+      "shape": "레몬형",
+      "item_count": 4,
+      "image_count": 8,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "마름모형",
+      "item_count": 103,
+      "image_count": 207,
+      "acceptance_radius": 1.2615772485733032
+    },
+    {
+      "shape": "물방울형",
+      "item_count": 102,
+      "image_count": 203,
+      "acceptance_radius": 1.6593196392059326
+    },
+    {
+      "shape": "물방울형2",
+      "item_count": 6,
+      "image_count": 12,
+      "acceptance_radius": 0.5210021138191223
+    },
+    {
+      "shape": "물방울형3",
+      "item_count": 1,
+      "image_count": 2,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "반원형",
+      "item_count": 3,
+      "image_count": 6,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "방패형",
+      "item_count": 4,
+      "image_count": 8,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "사각형",
+      "item_count": 286,
+      "image_count": 571,
+      "acceptance_radius": 4.7822065353393555
+    },
+    {
+      "shape": "사과형",
+      "item_count": 34,
+      "image_count": 68,
+      "acceptance_radius": 3.0357367992401123
+    },
+    {
+      "shape": "삼각형",
+      "item_count": 259,
+      "image_count": 518,
+      "acceptance_radius": 2.855968713760376
+    },
+    {
+      "shape": "심장형",
+      "item_count": 41,
+      "image_count": 82,
+      "acceptance_radius": 2.3225269317626953
+    },
+    {
+      "shape": "십각형",
+      "item_count": 1,
+      "image_count": 2,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "애벌레형",
+      "item_count": 1,
+      "image_count": 2,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "얼굴모양",
+      "item_count": 1,
+      "image_count": 2,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "오각형",
+      "item_count": 61,
+      "image_count": 122,
+      "acceptance_radius": 3.0697927474975586
+    },
+    {
+      "shape": "원형",
+      "item_count": 10606,
+      "image_count": 21139,
+      "acceptance_radius": 1.6228806972503662
+    },
+    {
+      "shape": "육각형",
+      "item_count": 55,
+      "image_count": 110,
+      "acceptance_radius": 2.4152400493621826
+    },
+    {
+      "shape": "장방형",
+      "item_count": 7395,
+      "image_count": 14766,
+      "acceptance_radius": 1.3053104877471924
+    },
+    {
+      "shape": "클로버형",
+      "item_count": 4,
+      "image_count": 8,
+      "acceptance_radius": 1.554921269416809
+    },
+    {
+      "shape": "타원형",
+      "item_count": 7794,
+      "image_count": 15281,
+      "acceptance_radius": 1.222047209739685
+    },
+    {
+      "shape": "탄환형",
+      "item_count": 21,
+      "image_count": 41,
+      "acceptance_radius": 5.002346038818359
+    },
+    {
+      "shape": "팔각형",
+      "item_count": 280,
+      "image_count": 560,
+      "acceptance_radius": 2.0602095127105713
+    }
+  ],
+  "failures": [
+    {
+      "path": "C:\\Workspace\\deeplearning\\pill_shape_similarity\\pill_images_original\\15\\back\\201605856_트윈포지정80_5밀리그램_201610040008801.png",
+      "error": "ShapeExtractionError: No pill-like foreground component was found"
+    }
+  ]
+}
