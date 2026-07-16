@@ -320,9 +320,9 @@ def build_slide_3(prs):
     )
 
     cards = [
-        (1.65, "장방형", ROOT / "shape_rectangular.png", BLUE),
-        (9.62, "사과형", ROOT / "shape_apple_v2.png", CYAN),
-        (17.59, "땅콩형", ROOT / "shape_peanut.png", BLUE),
+        (1.65, "장방형", ROOT / "shape_rectangular_bg.png", BLUE),
+        (9.62, "사과형", ROOT / "shape_apple_bg.png", CYAN),
+        (17.59, "땅콩형", ROOT / "shape_peanut_bg.png", BLUE),
     ]
     for idx, (x, label, image_path, color) in enumerate(cards, start=1):
         add_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, x, 4.95, 7.42, 6.40, LIGHT_GRAY)

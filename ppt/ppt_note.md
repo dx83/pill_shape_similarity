@@ -124,7 +124,7 @@
 
 | 장방형 | 사과형 | 땅콩형 |
 |---|---|---|
-| ![장방형 알약](shape_rectangular.png) | ![사과형 알약](shape_apple_v2.png) | ![땅콩형 알약](shape_peanut.png) |
+| ![장방형 알약](shape_rectangular.png) | ![사과형 알약](shape_apple.png) | ![땅콩형 알약](shape_peanut.png) |
 | **Top-1 일치** | **Top-1 일치** | **Top-1 일치** |
 
 하단 — 결과와 함께 제공되는 정보:

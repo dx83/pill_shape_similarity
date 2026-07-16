@@ -60,3 +60,40 @@ shape_features.md
 2. ppt.note.md 파일을 바탕으로 proj2_ssm.pptx 작성
 3. ppt 템플릿은 ppt_template_proj2.pptx를 사용
 4. ppt는 3장만 만들면 된다.
+
+
+# 이미지 교체
+1. ppt 폴더에 있는 proj2_ssm.pptx 의 첫 번째 페이지에 들어가는 이미지 shape_extraction_process.png 를 수정하고 싶다.
+2. 기존 이미지에는 사과형이 들어가 있는데 'C:\Workspace\deeplearning\pill_shape_similarity\test_images\A11AOOOOO100201.jpg' 이 이미지로 교체하고 싶다.
+3. 기존 이미지의 내용 형식은 지키면서 사과형 알약만 물방울3 알약으로 교체시켜줘
+4. 수정한 이미지는 shape_extraction_process_.png 로 만들어줘
+
+
+
+# 요구사항
+니가 크롭한 이미지들인데 크롭만 해야하는데 가공이 너무 들어가서 알약 같지가 않다.
+"C:\Workspace\deeplearning\pill_shape_similarity\ppt\shape_apple.png"
+"C:\Workspace\deeplearning\pill_shape_similarity\ppt\shape_peanut.png"
+"C:\Workspace\deeplearning\pill_shape_similarity\ppt\shape_rectangular.png"
+
+다음 원본 이미지들에서 위와 같은 형식으로 다시 크롭해줘
+
+"C:\Workspace\deeplearning\pill_shape_similarity\test_images\200909230007701.jpg"
+이미지내에서 왼쪽 알약만 크롭해서 다른 가공 없이 ppt\shape_apple_.png 로 생성
+
+"C:\Workspace\deeplearning\pill_shape_similarity\test_images\200907150583201.jpg"
+이미지내에서 왼쪽 알약만 크롭해서 다른 가공 없이 ppt\shape_rectangular_.png
+
+"C:\Workspace\deeplearning\pill_shape_similarity\test_images\201110240001401.jpg"
+이미지내에서 왼쪽 알약만 크롭해서 다른 가공 없이 ppt\shape_peanut_.png
+
+
+# 추가 수정
+니가 만든 이미지들 배경 수정이 필요하다
+이미지 사이즈를 800x500 으로 동일하게 맞추고 알약 이미지 자체는 크기를 늘리거나 하지마
+나머지를 배경으로 채우는데 "C:\Workspace\deeplearning\pill_shape_similarity\ppt\shape_apple.png"와 동일한 형식으로 채워줘
+수정할 이미지들
+    - ppt/shape_apple_.png
+    - ppt/shape_rectangular_.png
+    - ppt/shape_peanut_.png
+수정한 후 파일명 뒤에 bg 를 붙여서 저장해줘
